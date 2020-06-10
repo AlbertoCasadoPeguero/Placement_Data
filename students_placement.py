@@ -56,6 +56,8 @@ sns.scatterplot(range(0,len(dataset['MBA'])),'MBA',
 
 #Data correlation
 sns.heatmap(dataset.corr(),annot = True)
+#Even though it has high correlation with other features removing the feature
+#Result in, not so bad, a little less accuracy con the models.
 dataset.drop(['secondary_edu'],axis = 1,inplace = True)
 
 #Since the salary has nan values is not a good choice to make a predictor on the salary
