@@ -89,4 +89,94 @@ scaler = ColumnTransformer(transformers=[('scaler',StandardScaler(),[7,9,11,13,1
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+#Evaluation metrics
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
+from sklearn.model_selection import cross_val_score
+
 #Implementing different models
+
+#Naive Bayes - Mean score = 0.80% - Report score = 81%
+from sklearn.naive_bayes import GaussianNB
+naive = GaussianNB()
+
+naive_score = cross_val_score(naive,X_train,y_train,cv = 10)
+print(np.mean(naive_score))
+
+naive.fit(X_train, y_train)
+y_pred = naive.predict(X_test)
+print(classification_report(y_test,y_pred))
+
+#Logistics Regression - Mean score = 86%- Report score = 93%
+from sklearn.linear_model import LogisticRegression
+log_regressor = LogisticRegression()
+
+param_grid = {'C':[0.1,1,10,100]}
+grid_search = GridSearchCV(log_regressor,param_grid,cv = 10)
+grid_search.fit(X_train,y_train)
+print(grid_search.best_params_)
+
+log_regressor = LogisticRegression(C = 10)
+log_score = cross_val_score(log_regressor,X_train,y_train,cv = 10)
+print(np.mean(log_score))
+
+log_regressor.fit(X_train, y_train)
+y_pred = log_regressor.predict(X_test)
+print(classification_report(y_test, y_pred))
+
+#KNeightbors - Mean score = 84% - Report score = 88%
+from sklearn.neighbors import KNeighborsClassifier
+kneighbor = KNeighborsClassifier()
+
+param_grid = {'n_neighbors':[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]}
+grid_search = GridSearchCV(kneighbor,param_grid, cv = 10)
+grid_search.fit(X_train,y_train)
+print(grid_search.best_params_)
+
+kneighbor = KNeighborsClassifier(n_neighbors = 14)
+kneighbor_score = cross_val_score(kneighbor,X_train,y_train,cv = 10)
+print(np.mean(kneighbor_score))
+
+kneighbor.fit(X_train, y_train)
+y_pred = kneighbor.predict(X_test)
+print(classification_report(y_test,y_pred))
+
+#Support Vector Classifier - Mean score = 88%- Report Score = 93%
+from sklearn.svm import SVC
+svc = SVC()
+
+param_grid = {'kernel':['linear','rbf','sigmoid'],
+              'C':[0.1,1,10,100],
+              'gamma':[0.1,1,10,100]}
+grid_search = GridSearchCV(svc,param_grid, cv = 10)
+grid_search.fit(X_train,y_train)
+print(grid_search.best_params_)
+
+svc = SVC(C = 1,gamma = 0.1,kernel = 'linear')
+svc_score = cross_val_score(svc, X_train,y_train,cv = 10)
+print(np.mean(svc_score))
+
+svc.fit(X_train, y_train)
+y_pred = svc.predict(X_test)
+print(classification_report(y_test, y_pred))
+
+#Decision Tree - Mean score = 81%- Report score = 79%
+from sklearn.tree import DecisionTreeClassifier
+tree = DecisionTreeClassifier()
+
+param_grid = {'criterion':['gini','entropy'],
+              'max_depth':[1,2,3,4,5,6,7,8,9,10],
+              'min_samples_split':[2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+              'min_samples_leaf':[1,2,3,4,5,6,7,8,9,10]}
+grid_search = GridSearchCV(tree,param_grid, cv = 10)
+grid_search.fit(X_train,y_train)
+print(grid_search.best_params_)
+
+tree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 9,
+                              min_samples_split = 12, min_samples_leaf = 3)
+tree_score = cross_val_score(tree, X_train, y_train, cv = 10)
+print(np.mean(tree_score))
+
+tree.fit(X_train, y_train)
+y_pred = tree.predict(X_test)
+print(classification_report(y_test,y_pred))
