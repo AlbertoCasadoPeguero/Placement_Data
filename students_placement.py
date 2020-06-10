@@ -84,3 +84,9 @@ y = dataset['placement']
 X_train, X_test, y_train,y_test = train_test_split(X, y,test_size = 0.20)
 
 #Scaling the features
+scaler = ColumnTransformer(transformers=[('scaler',StandardScaler(),[7,9,11,13,15])],
+                           remainder = 'passthrough')
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+#Implementing different models
